@@ -1,18 +1,31 @@
+"use client";
+
 import Image from "next/image";
-import { Button } from "@/components/ui/button";
-import PatientForm from "@/components/forms/PatientForm";
-import Link from "next/link";
 import AppointmentForm from "@/components/forms/AppointmentForm";
-import { getPatient } from "@/lib/actions/patient.actions";
+import { useParams } from "next/navigation";
+import { useEffect, useState } from "react";
 
-import * as Sentry from "@sentry/nextjs";
+const NewAppointment = () => {
+  const searchParams = useParams();
+  const userId = searchParams.id as string;
 
-const NewAppointment = async ({ params }: SearchParamProps) => {
-  const userId = params.id;
+  const [patientId, setPatientId] = useState("");
 
-  const patient = await getPatient(userId);
+  useEffect(() => {
+    const fetchPatient = async () => {
+      const response = await fetch(`/api/patients?userId=${userId}`, {
+        method: "GET",
+      });
 
-  Sentry.metrics.set("user_view_new-appointment", patient.name);
+      if (response.ok) {
+        const data = await response.json();
+        const patient = data.result[0];
+        setPatientId(patient._id);
+      }
+    };
+
+    fetchPatient();
+  }, []);
   return (
     <div className="flex h-screen max-h-screen">
       <section className="remove-scrollbar container my-auto">
@@ -28,7 +41,7 @@ const NewAppointment = async ({ params }: SearchParamProps) => {
           <AppointmentForm
             type="create"
             userId={userId}
-            patientId={patient.$id}
+            patientId={patientId}
           />
 
           <p className="copyright mt-10 py-12">© 2024 CarePulse</p>

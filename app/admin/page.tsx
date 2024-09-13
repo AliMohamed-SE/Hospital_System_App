@@ -7,7 +7,7 @@ import Link from "next/link";
 import React from "react";
 
 const Admin = async () => {
-  const appointments = await getRecentAppointmentList();
+  const appointments = await getRecentAppointmentList(null);
 
   return (
     <div className="mx-auto flex max-w-7xl flex-col space-y-14">
@@ -21,7 +21,25 @@ const Admin = async () => {
             className="h-8 w-fit"
           />
         </Link>
-        <p className="text-16-semibold">Admin Dashboard</p>
+        <div className="flex flex-row gap-6 items-center">
+          <Link href="/admin">
+            <p className="text-16-semibold">Home</p>
+          </Link>
+          <Link href="/admin/doctors">
+            <p className="text-16-semibold">Doctors</p>
+          </Link>
+          <Link href="/admin/labs">
+            <p className="text-16-semibold">Labs</p>
+          </Link>
+          <Link href="/admin/radiologies">
+            <p className="text-16-semibold">Radiologies</p>
+          </Link>
+          <Link href="/">
+            <button type="button" className="outline_btn">
+              Sign Out
+            </button>
+          </Link>
+        </div>
       </header>
       <main className="admin-main">
         <section className="w-full space-y-4">
@@ -35,19 +53,19 @@ const Admin = async () => {
             type="appointments"
             count={appointments.scheduledCount}
             label="Scheduled appointments"
-            icon="assets/icons/appointments.svg"
+            icon="/assets/icons/appointments.svg"
           />
           <StatCard
             type="pending"
             count={appointments.pendingCount}
             label="Pending appointments"
-            icon="assets/icons/pending.svg"
+            icon="/assets/icons/pending.svg"
           />
           <StatCard
             type="cancelled"
             count={appointments.cancelledCount}
             label="Cancelled appointments"
-            icon="assets/icons/cancelled.svg"
+            icon="/assets/icons/cancelled.svg"
           />
         </section>
 

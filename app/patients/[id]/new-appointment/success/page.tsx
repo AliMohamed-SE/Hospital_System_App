@@ -1,25 +1,13 @@
 import { Button } from "@/components/ui/button";
-import { Doctors } from "@/constants";
-import { getAppointment } from "@/lib/actions/appointment.actions";
+import { getAppointment } from "@/lib/DBactions";
 import { formatDateTime } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 
-import * as Sentry from "@sentry/nextjs";
-import { getUser } from "@/lib/actions/patient.actions";
-
-const Success = async ({ params, searchParams }: SearchParamProps) => {
+const Success = async ({ params }: SearchParamProps) => {
   const userId = params.id;
-  const user = await getUser(userId);
 
-  const appointmentId = (searchParams?.appointmentId as string) || "";
-  const appointment = await getAppointment(appointmentId!);
-
-  const doctor = Doctors.find(
-    (doc) => doc.name === appointment.primaryPhysician
-  );
-
-  Sentry.metrics.set("user_view_appointment-success", user.name);
+  const appointment = await getAppointment(userId);
 
   return (
     <div className="flex h-screen max-h-screen px-[5%]">
@@ -52,15 +40,9 @@ const Success = async ({ params, searchParams }: SearchParamProps) => {
         <section className="request-details">
           <p>Request appointment details:</p>
           <div className="flex items-center gap-3">
-            <Image
-              src={doctor?.image!}
-              width={100}
-              height={100}
-              alt="doctor"
-              className="size-6"
-            />
-
-            <p className="whitespace-nowrap">Dr. {doctor?.name}</p>
+            <p className="whitespace-nowrap">
+              Dr. {appointment?.primaryPhysician}
+            </p>
           </div>
           <div className="flex gap-2">
             <Image
@@ -69,14 +51,14 @@ const Success = async ({ params, searchParams }: SearchParamProps) => {
               width={24}
               alt="calendar"
             />
-            <p>{formatDateTime(appointment.schedule).dateTime}</p>
+            <p>
+              {formatDateTime(appointment?.schedule || new Date()).dateTime}
+            </p>
           </div>
         </section>
 
         <Button variant="outline" className="shad-primary-btn" asChild>
-          <Link href={`/patients/${userId}/new-appointment`}>
-            New Appointment
-          </Link>
+          <Link href={`/patients/${userId}/home`}>Home</Link>
         </Button>
         <div className="text-14-regular mt-20 flex justify-between">
           <p className="justify-items-end text-dark-600 xl:text-left">

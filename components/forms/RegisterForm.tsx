@@ -35,7 +35,7 @@ import { SelectItem } from "../ui/select";
 import Image from "next/image";
 import FileUploader from "../FileUploader";
 
-const RegisterForm = ({ user }: { user: User }) => {
+const RegisterForm = ({ userId }: { userId: string }) => {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
@@ -43,42 +43,58 @@ const RegisterForm = ({ user }: { user: User }) => {
     resolver: zodResolver(PatientFormValidation),
     defaultValues: {
       ...PatientFormDefaultValues,
-      name: user.name,
-      email: user.email,
-      phone: user.phone,
+      name: "",
+      email: "",
+      phone: "",
     },
   });
 
   async function onSubmit(values: z.infer<typeof PatientFormValidation>) {
     setIsLoading(true);
 
-    let formData;
+    let imageUrl;
 
     if (
       values.identificationDocument &&
       values.identificationDocument.length > 0
     ) {
-      const blobFile = new Blob([values.identificationDocument[0]], {
-        type: values.identificationDocument[0].type,
-      });
+      const formData = new FormData();
+      formData.append("file", values.identificationDocument[0]);
+      formData.append("upload_preset", "pqca8ffg");
 
-      formData = new FormData();
-      formData.append("blobFile", blobFile);
-      formData.append("fileName", values.identificationDocument[0].name);
+      // Upload Image to cloudinary
+      const response = await fetch(
+        `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        imageUrl = data.secure_url;
+      } else {
+        console.log("error uploading image");
+      }
     }
 
     try {
       const patientData = {
         ...values,
-        userId: user.$id,
+        userId: userId,
         birthDate: new Date(values.birthDate),
-        identificationDocument: formData,
+        identificationDocument: imageUrl || "",
       };
 
-      // @ts-ignore
-      const patient = await registerPatient(patientData);
+      const response = await fetch("/api/patients", {
+        method: "POST",
+        body: JSON.stringify(patientData),
+      });
 
-      if (user) router.push(`/patients/${user.$id}/new-appointment`);
+      if (response.ok) {
+        router.push(`/patients/${userId}/home`);
+      }
     } catch (error) {
       console.log(error);
     }

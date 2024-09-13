@@ -8,9 +8,7 @@ import * as Sentry from "@sentry/nextjs";
 
 const Register = async ({ params }: SearchParamProps) => {
   const userId = params.id;
-  const user = await getUser(userId);
 
-  Sentry.metrics.set("user_view_register", user.name);
   return (
     <div className="flex h-screen max-h-screen">
       <section className="remove-scrollbar container">
@@ -23,7 +21,7 @@ const Register = async ({ params }: SearchParamProps) => {
             className="mb-12 h-10 w-fit"
           />
 
-          <RegisterForm user={user} />
+          <RegisterForm userId={userId} />
 
           <p className="copyright py-12">© 2024 CarePulse</p>
         </div>

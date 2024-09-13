@@ -1,14 +1,17 @@
 import { z } from "zod";
 
 export const UserFormValidation = z.object({
+  phone: z
+    .string()
+    .refine((phone) => /^\+\d{10,15}$/.test(phone), "Invalid phone number"),
+});
+
+export const PersonalFormValidation = z.object({
   name: z
     .string()
     .min(2, "Name must be at least 2 characters")
     .max(50, "Name must be at most 50 characters"),
-  email: z.string().email("Invalid email address"),
-  phone: z
-    .string()
-    .refine((phone) => /^\+\d{10,15}$/.test(phone), "Invalid phone number"),
+  image: z.custom<File[]>(),
 });
 
 export const PatientFormValidation = z.object({
@@ -77,6 +80,7 @@ export const PatientFormValidation = z.object({
 });
 
 export const CreateAppointmentSchema = z.object({
+  appointmenttype: z.string().min(2, "Select an appointment type"),
   primaryPhysician: z.string().min(2, "Select at least one doctor"),
   schedule: z.coerce.date(),
   reason: z
@@ -88,6 +92,7 @@ export const CreateAppointmentSchema = z.object({
 });
 
 export const ScheduleAppointmentSchema = z.object({
+  appointmenttype: z.string().min(2, "Select an appointment type"),
   primaryPhysician: z.string().min(2, "Select at least one doctor"),
   schedule: z.coerce.date(),
   reason: z.string().optional(),
@@ -96,6 +101,7 @@ export const ScheduleAppointmentSchema = z.object({
 });
 
 export const CancelAppointmentSchema = z.object({
+  appointmenttype: z.string().min(2, "Select an appointment type"),
   primaryPhysician: z.string().min(2, "Select at least one doctor"),
   schedule: z.coerce.date(),
   reason: z.string().optional(),
