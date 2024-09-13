@@ -9,7 +9,8 @@
     <img src="https://img.shields.io/badge/-Next_JS-black?style=for-the-badge&logoColor=white&logo=nextdotjs&color=000000" alt="nextdotjs" />
     <img src="https://img.shields.io/badge/-TypeScript-black?style=for-the-badge&logoColor=white&logo=typescript&color=3178C6" alt="typescript" />
     <img src="https://img.shields.io/badge/-Tailwind_CSS-black?style=for-the-badge&logoColor=white&logo=tailwindcss&color=06B6D4" alt="tailwindcss" />
-    <img src="https://img.shields.io/badge/-Appwrite-black?style=for-the-badge&logoColor=white&logo=appwrite&color=FD366E" alt="appwrite" />
+    <img src="https://img.shields.io/badge/-Mongodb-black?style=for-the-badge&logoColor=white&logo=mongodb&color=3FA037" alt="mongodb" />
+    <img src="https://img.shields.io/badge/-Cloudinary-black?style=for-the-badge&logoColor=white&logo=cloudinary&color=3448C5" alt="cloudinary" />
   </div>
 
   <h3 align="center">A HealthCare Management System</h3>
@@ -33,11 +34,11 @@ A healthcare patient management application that allows patients to easily regis
 ## <a name="tech-stack">⚙️ Tech Stack</a>
 
 - Next.js
-- Appwrite
+- Mongodb
+- Cloudinary
 - Typescript
 - TailwindCSS
 - ShadCN
-- Twilio
 
 ## <a name="features">🔋 Features</a>
 
@@ -55,7 +56,7 @@ A healthcare patient management application that allows patients to easily regis
 
 👉 **Complete Responsiveness**: The application works seamlessly on all device types and screen sizes.
 
-👉 **File Upload Using Appwrite Storage**: Users can upload and store files securely within the app using Appwrite storage services.
+👉 **File Upload Using Cloudinary Storage**: Users can upload and store files securely within the app using Cloudinary storage services.
 
 👉 **Manage and Track Application Performance Using Sentry**: The application uses Sentry to monitor and track its performance and detect any errors.
 
@@ -74,5 +75,3 @@ and many more, including code architecture and reusability
 👉 **Add/Remove/Update Departments from Admin Side**: Administrators have the ability to add/remove/update departments as needed.
 
 👉 **Add/Remove/Update Radiology & Lab Tests Available from Admin Side**: Administrators have the ability to add/remove/update Radiology & Lab Tests available as needed.
-
-👉 **Filter doctors by department**: Patients have the ability to filter doctors according to the department they need.
