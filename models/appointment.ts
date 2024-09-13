@@ -1,9 +1,9 @@
-import { Patient } from "@/types/appwrite.types";
 import { Schema, Types, model, models } from "mongoose";
+import { IPatient } from "@/models/patient";
 
 export interface IAppointment {
   _id: Types.ObjectId;
-  patient: Patient;
+  patient: IPatient;
   schedule: Date;
   status: Status;
   appointmenttype: Type;
@@ -20,7 +20,7 @@ const AppointmentSchema = new Schema(
     schedule: { type: Date, required: true },
     status: {
       type: String,
-      enum: ["pending", "confirmed", "cancelled"],
+      enum: ["pending", "scheduled", "cancelled"],
       required: true,
     }, // Enum for status
     appointmenttype: {

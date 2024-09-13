@@ -1,6 +1,33 @@
-import { Schema, model, models } from "mongoose";
+import { Schema, Types, model, models } from "mongoose";
 
-const PatientSchema = new Schema(
+export interface IPatient {
+  _id: Types.ObjectId;
+  userId: string;
+  name: string;
+  email: string;
+  phone: string;
+  birthDate: Date;
+  gender: string;
+  address: string;
+  occupation: string;
+  emergencyContactName: string;
+  emergencyContactNumber: string;
+  primaryPhysician: string;
+  insuranceProvider: string;
+  insurancePolicyNumber: string;
+  allergies?: string;
+  currentMedication?: string;
+  familyMedicalHistory?: string;
+  pastMedicalHistory?: string;
+  identificationType?: string;
+  identificationNumber?: string;
+  identificationDocument?: string;
+  privacyConsent: boolean;
+  treatmentConsent: boolean;
+  disclosureConsent: boolean;
+}
+
+const PatientSchema = new Schema<IPatient>(
   {
     userId: {
       type: String,

@@ -204,25 +204,13 @@ const AppointmentForm = ({
           form.reset();
         }
       } else {
-        const appointmentToUpdate = {
-          userId,
-          appointmentId: appointment?._id!,
-          appointment: {
-            appointmenttype: values?.appointmenttype,
-            primaryPhysician: values?.primaryPhysician,
-            schedule: new Date(values?.schedule),
-            status: status as Status,
-            cancellationReason: values?.cancellationReason,
-          },
-          type,
-        };
-
         const response = await fetch("/api/appointments", {
           method: "PATCH",
-          body: JSON.stringify(appointmentToUpdate),
+          body: JSON.stringify({ appointmentId: appointment?._id! }),
         });
 
         if (response.ok) {
+          refresh && refresh();
           setOpen && setOpen(false);
           form.reset();
         }
@@ -302,34 +290,32 @@ const AppointmentForm = ({
                 </FormItem>
               )}
             />
-            {currentAppointmentType && (
-              <CustomFormField
-                fieldType={FormFieldType.SELECT}
-                control={form.control}
-                name="primaryPhysician"
-                label={currentAppointmentType!}
-                placeholder={`Select a ${currentAppointmentType}`}
-              >
-                {list.map((item, i) => (
-                  <SelectItem
-                    key={item.name + i}
-                    value={item.name}
-                    className="cursor-pointer hover:bg-gray-700"
-                  >
-                    <div className="flex items-center gap-2">
-                      <Image
-                        src={item.image}
-                        width={32}
-                        height={32}
-                        alt="doctor | radiology | lab"
-                        className="rounded-full border border-dark-500"
-                      />
-                      <p>{item.name}</p>
-                    </div>
-                  </SelectItem>
-                ))}
-              </CustomFormField>
-            )}
+            <CustomFormField
+              fieldType={FormFieldType.SELECT}
+              control={form.control}
+              name="primaryPhysician"
+              label={currentAppointmentType!}
+              placeholder={`Select a ${currentAppointmentType}`}
+            >
+              {list.map((item, i) => (
+                <SelectItem
+                  key={item.name + i}
+                  value={item.name}
+                  className="cursor-pointer hover:bg-gray-700"
+                >
+                  <div className="flex items-center gap-2">
+                    <Image
+                      src={item.image}
+                      width={32}
+                      height={32}
+                      alt="doctor | radiology | lab"
+                      className="rounded-full border border-dark-500"
+                    />
+                    <p>{item.name}</p>
+                  </div>
+                </SelectItem>
+              ))}
+            </CustomFormField>
 
             <CustomFormField
               fieldType={FormFieldType.DATE_PICKER}

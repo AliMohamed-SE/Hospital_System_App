@@ -1,13 +1,40 @@
+"use client";
+
 import { DataTable } from "@/components/table/DataTable";
 import StatCard from "@/components/StatCard";
 import { columns } from "@/components/table/columns";
-import { getRecentAppointmentList } from "@/lib/actions/appointment.actions";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
-const Admin = async () => {
-  const appointments = await getRecentAppointmentList(null);
+interface ICounts {
+  scheduledCount: number;
+  pendingCount: number;
+  cancelledCount: number;
+}
+
+const Admin = () => {
+  const [appointments, setAppointments] = useState([]);
+  const [counts, setCounts] = useState<ICounts>({
+    scheduledCount: 0,
+    pendingCount: 0,
+    cancelledCount: 0,
+  });
+
+  const fetchData = async () => {
+    const response = await fetch("/api/appointments", { method: "GET" });
+
+    if (response.ok) {
+      const data = await response.json();
+
+      setAppointments(data.appointments);
+      setCounts(data.counts);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   return (
     <div className="mx-auto flex max-w-7xl flex-col space-y-14">
@@ -51,25 +78,25 @@ const Admin = async () => {
         <section className="admin-stat">
           <StatCard
             type="appointments"
-            count={appointments.scheduledCount}
+            count={counts.scheduledCount}
             label="Scheduled appointments"
             icon="/assets/icons/appointments.svg"
           />
           <StatCard
             type="pending"
-            count={appointments.pendingCount}
+            count={counts.pendingCount}
             label="Pending appointments"
             icon="/assets/icons/pending.svg"
           />
           <StatCard
             type="cancelled"
-            count={appointments.cancelledCount}
+            count={counts.cancelledCount}
             label="Cancelled appointments"
             icon="/assets/icons/cancelled.svg"
           />
         </section>
 
-        <DataTable columns={columns} data={appointments.documents} />
+        <DataTable columns={columns(fetchData, true)} data={appointments} />
       </main>
     </div>
   );

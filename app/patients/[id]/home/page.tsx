@@ -71,7 +71,7 @@ const Home = () => {
             Create Appointment
           </Button>
           <DataTable
-            columns={columns(getAppointmentsList)}
+            columns={columns(getAppointmentsList, false)}
             data={appointments}
           />
         </div>

@@ -14,7 +14,8 @@ import { Appointment } from "@/types/appwrite.types";
 import { IAppointment } from "@/models/appointment";
 
 export const columns = (
-  onDataSubmit: () => void
+  onDataSubmit: () => void,
+  isAdmin: boolean
 ): ColumnDef<IAppointment>[] => [
   {
     header: "ID",
@@ -65,16 +66,19 @@ export const columns = (
     cell: ({ row: { original: data }, table }) => {
       return (
         <div className="flex gap-1">
-          <AppointmentModal
-            type="schedule"
-            patientId={data.patient._id}
-            userId={data.userId}
-            appointment={data}
-            refresh={onDataSubmit}
-          />
+          {isAdmin && (
+            <AppointmentModal
+              type="schedule"
+              patientId={data.patient._id.toString()}
+              userId={data.userId}
+              appointment={data}
+              refresh={onDataSubmit}
+            />
+          )}
+
           <AppointmentModal
             type="cancel"
-            patientId={data.patient._id}
+            patientId={data.patient._id.toString()}
             userId={data.userId}
             appointment={data}
             refresh={onDataSubmit}
